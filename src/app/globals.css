@@ -1,0 +1,300 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --bg-primary: #050505;
+  --bg-secondary: #0b0b0b;
+  --bg-tertiary: #121212;
+  
+  --accent-green: #10b981;
+  --border-green: rgba(16, 185, 129, 0.15);
+  --border-green-hover: rgba(16, 185, 129, 0.4);
+  
+  --glass-bg: rgba(15, 15, 15, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.05);
+  --glass-blur: blur(12px);
+  
+  --text-primary: #ffffff;
+  --text-secondary: #a3a3a3;
+  --text-muted: #737373;
+  
+  --border-light: rgba(255, 255, 255, 0.03);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-sans), 'Inter', sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Glassmorphic Panel utility */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+/* Premium Buttons */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background-color: var(--accent-green);
+  color: #ffffff;
+  font-family: var(--font-heading), 'Outfit', sans-serif;
+  font-weight: 600;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.2);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(16, 185, 129, 0.35);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background-color: transparent;
+  color: #ffffff;
+  font-family: var(--font-heading), 'Outfit', sans-serif;
+  font-weight: 600;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-secondary:hover {
+  transform: translateY(-2px);
+  border-color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Form inputs */
+.form-input {
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 14px 18px;
+  color: #ffffff;
+  font-family: var(--font-sans), 'Inter', sans-serif;
+  font-size: 0.9rem;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--accent-green);
+  background: rgba(16, 185, 129, 0.01);
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.15);
+}
+
+/* Ambient glow accents */
+.green-glow-bg {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.06) 0%, rgba(16, 185, 129, 0) 70%);
+  pointer-events: none;
+  z-index: 1;
+  filter: blur(60px);
+}
+
+.sun-glow-bg {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.03) 0%, rgba(245, 158, 11, 0) 70%);
+  pointer-events: none;
+  z-index: 1;
+  filter: blur(60px);
+}
+
+/* Grid overlay background */
+.grid-bg {
+  position: absolute;
+  inset: 0;
+  background-size: 50px 50px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.01) 1px, transparent 1px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.grid-bg-mask {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 20%, var(--bg-primary) 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Text Gradients */
+.text-gradient-green {
+  background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+.text-gradient-sun {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+/* Custom minimal scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 99px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-green);
+}
+
+/* Keyframe animations */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  50% {
+    opacity: 0.4;
+    transform: translate(-50%, 6px);
+  }
+}
+
+/* --- MOBILE & RESPONSIVE LAYOUT STYLES --- */
+
+/* Utility section paddings on smaller screens */
+@media (max-width: 767px) {
+  section,
+  footer,
+  #farm-intro,
+  #why-choose-us,
+  #growing-process,
+  #current-crops,
+  #custom-crop-program,
+  #sustainability,
+  #bulk-supply,
+  #contact {
+    padding: 60px 20px !important;
+  }
+}
+
+/* Responsive Navbar */
+.mobile-menu-toggle {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .nav-links-desktop,
+  .nav-cta-desktop {
+    display: none !important;
+  }
+  .mobile-menu-toggle {
+    display: block !important;
+  }
+}
+
+/* Responsive Hero Canvas UI elements */
+@media (max-width: 767px) {
+  .hero-sticky-element {
+    overflow: hidden !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-ctas {
+    flex-direction: column !important;
+    gap: 12px !important;
+    bottom: 8vh !important;
+    width: 90% !important;
+    align-items: center !important;
+  }
+  .hero-ctas button {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+}
+
+/* WhyChooseUs Responsive Grid Fallback */
+@media (max-width: 767px) {
+  .why-choose-us-container {
+    height: auto !important;
+    min-height: auto !important;
+    padding: 80px 20px !important;
+  }
+  .why-scroll-track {
+    flex-direction: column !important;
+    width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    gap: 20px !important;
+  }
+  .why-card {
+    width: 100% !important;
+    padding: 30px 24px !important;
+  }
+}
+
+/* Growing Process (Vertical Timeline) mobile positioning */
+@media (max-width: 767px) {
+  .timeline-track-line,
+  .timeline-glow-line {
+    left: 20px !important;
+    transform: none !important;
+  }
+  
+  .process-step-node {
+    justify-content: flex-start !important;
+    padding-left: 35px !important;
+    margin-bottom: 30px !important;
+    width: 100% !important;
+  }
+  
+  .process-step-node > div {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 0 !important;
+  }
+}
