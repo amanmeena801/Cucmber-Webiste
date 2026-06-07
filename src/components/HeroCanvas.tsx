@@ -41,7 +41,7 @@ export default function HeroCanvas() {
     if (!isLoading) return;
     const interval = setInterval(() => {
       setSubtextIndex((prev) => (prev + 1) % subtextOptions.length);
-    }, 2500);
+    }, 600);
     return () => clearInterval(interval);
   }, [isLoading, subtextOptions.length]);
 
@@ -286,29 +286,43 @@ export default function HeroCanvas() {
           </div>
           <div
             style={{
-              fontFamily: "var(--font-heading)",
-              fontSize: "1.25rem",
-              fontWeight: "500",
-              letterSpacing: "0.08em",
-              color: "#ffffff",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "8px",
               textAlign: "center",
+              width: "100%",
             }}
           >
-            Growing Something Fresh...
-            <div
+            <h3
+              style={{
+                fontFamily: "var(--font-heading)",
+                fontSize: "1.25rem",
+                fontWeight: "500",
+                letterSpacing: "0.08em",
+                color: "#ffffff",
+                margin: 0,
+                textAlign: "center",
+              }}
+            >
+              Growing Something Fresh...
+            </h3>
+            <span
               key={subtextIndex}
               style={{
                 fontSize: "0.85rem",
                 color: "var(--text-muted)",
                 letterSpacing: "0.05em",
-                marginTop: "10px",
                 fontWeight: "300",
                 fontFamily: "var(--font-sans)",
-                animation: "pulse 2s infinite ease-in-out",
+                display: "block",
+                textAlign: "center",
+                width: "100%",
               }}
             >
               {subtextOptions[subtextIndex]}
-            </div>
+            </span>
           </div>
         </div>
       )}
@@ -397,36 +411,6 @@ export default function HeroCanvas() {
               }}
             >
               {/* Luxury indicator tag */}
-              <div
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  padding: "6px 16px",
-                  borderRadius: "999px",
-                  border: "1px solid var(--border-green)",
-                  backgroundColor: "rgba(16, 185, 129, 0.05)",
-                  backdropFilter: "var(--glass-blur)",
-                  color: "var(--accent-green)",
-                  fontSize: "0.75rem",
-                  fontWeight: "600",
-                  letterSpacing: "0.15em",
-                  textTransform: "uppercase",
-                  marginBottom: "20px",
-                  boxShadow: "0 0 15px rgba(16,185,129,0.1)",
-                }}
-              >
-                <span
-                  style={{
-                    width: "6px",
-                    height: "6px",
-                    borderRadius: "50%",
-                    backgroundColor: "var(--accent-green)",
-                    boxShadow: "0 0 8px var(--accent-green)",
-                  }}
-                />
-                Climate-Chamber 04 // Life Cycle
-              </div>
 
               <h1
                 style={{
