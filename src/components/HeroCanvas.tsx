@@ -182,10 +182,23 @@ export default function HeroCanvas() {
       0.88
     );
 
+    // Toggle scroll indicator visibility based on scroll position (isolated scroll trigger)
+    const indicatorTrigger = ScrollTrigger.create({
+      trigger: containerRef.current,
+      start: "top+=50 top",
+      onEnter: () => {
+        gsap.to(".hero-scroll-indicator", { opacity: 0, y: 15, duration: 0.3, ease: "power2.out" });
+      },
+      onLeaveBack: () => {
+        gsap.to(".hero-scroll-indicator", { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" });
+      },
+    });
+
     return () => {
       window.removeEventListener("resize", resizeCanvas);
       if (tl.scrollTrigger) tl.scrollTrigger.kill();
       tl.kill();
+      indicatorTrigger.kill();
     };
   }, [isLoading, images]);
 
@@ -300,7 +313,7 @@ export default function HeroCanvas() {
       <div
         className="hero-sticky-element"
         style={{
-          position: "sticky",
+          position: "absolute",
           top: 0,
           left: 0,
           width: "100vw",
@@ -439,7 +452,12 @@ export default function HeroCanvas() {
             style={{
               position: "absolute",
               bottom: "12vh",
+              left: 0,
+              right: 0,
+              margin: "0 auto",
+              width: "max-content",
               display: "flex",
+              justifyContent: "center",
               gap: "20px",
               opacity: 0,
               pointerEvents: "auto",
@@ -472,6 +490,7 @@ export default function HeroCanvas() {
         {/* Scroll Indicator (Only active in the early frames) */}
         {!isLoading && (
           <div
+            className="hero-scroll-indicator"
             style={{
               position: "absolute",
               bottom: "40px",
@@ -487,11 +506,13 @@ export default function HeroCanvas() {
               textTransform: "uppercase",
               pointerEvents: "none",
               zIndex: 2,
-              animation: "pulse 2s infinite",
+              willChange: "transform, opacity",
             }}
           >
-            <span>Scroll to grow</span>
-            <ArrowDown size={14} className="text-emerald-500" />
+            <div className="pulse-indicator-anim" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "10px" }}>
+              <span>Scroll to grow</span>
+              <ArrowDown size={14} className="text-emerald-500" />
+            </div>
           </div>
         )}
       </div>

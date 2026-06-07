@@ -67,7 +67,7 @@ export default function Navbar() {
             color: "#ffffff",
           }}
         >
-          AERO<span style={{ color: "var(--accent-green)" }}>VERT</span>
+          Meenakrishi<span style={{ color: "var(--accent-green)" }}> Farm</span>
         </span>
       </div>
 

@@ -40,7 +40,7 @@ export default function Footer() {
                 color: "#ffffff",
               }}
             >
-              AERO<span style={{ color: "var(--accent-green)" }}>VERT</span>
+              Meenakrishi<span style={{ color: "var(--accent-green)" }}> Farm</span>
             </span>
           </div>
           <p style={{ lineHeight: "1.6", fontWeight: "300" }}>
@@ -110,9 +110,27 @@ export default function Footer() {
             Farm Location
           </h4>
           <div style={{ display: "flex", flexDirection: "column", gap: "12px", fontWeight: "300" }}>
-            <span>Sector 12, Haryana Greenhouse Zone</span>
-            <span>NCR Region, India</span>
-            <span>visits@aerovert.com</span>
+            <a
+              href="https://www.google.com/maps/search/?api=1&query=HXPC%2B69%2C+Sewad+Chhoti%2C+Rajasthan+332041"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                color: "var(--text-muted)",
+                textDecoration: "none",
+                transition: "color 0.2s ease",
+                lineHeight: "1.5",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "var(--accent-green)")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-muted)")}
+            >
+              Meena Krishi Farm, Sewad Chhoti,
+              <br />
+              Post Sewad Badi, Sikar,
+              <br />
+              Rajasthan, 332042
+            </a>
+            <span>visits@meenakrishifarm.com</span>
+            <span>8 AM to 9 PM, All Days</span>
           </div>
         </div>
       </div>
@@ -130,7 +148,7 @@ export default function Footer() {
           fontWeight: "300",
         }}
       >
-        <span>© {currentYear} AEROVERT AGROTECH LLP. All Rights Reserved.</span>
+        <span>© {currentYear} MEENAKRISHI FARM. All Rights Reserved.</span>
         <span>Corporate Identity: U01400HR2026PTC099120</span>
       </div>
     </footer>

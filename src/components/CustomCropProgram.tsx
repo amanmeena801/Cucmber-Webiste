@@ -65,6 +65,7 @@ export default function CustomCropProgram() {
     <section
       id="custom-crop-program"
       ref={containerRef}
+      className="contact-section"
       style={{
         position: "relative",
         backgroundColor: "var(--bg-primary)",
@@ -79,6 +80,7 @@ export default function CustomCropProgram() {
       <div className="green-glow-bg" style={{ top: "-100px", left: "-100px" }} />
 
       <div
+        className="contact-layout"
         style={{
           display: "grid",
           gridTemplateColumns: "1fr",
@@ -174,7 +176,7 @@ export default function CustomCropProgram() {
         {/* Right Form Card */}
         <div className="fade-in-el">
           <div
-            className="glass-panel"
+            className="glass-panel contact-form-panel"
             style={{
               padding: "40px 30px",
               borderRadius: "20px",
@@ -223,7 +225,7 @@ export default function CustomCropProgram() {
               </div>
             ) : (
               <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
+                <div className="form-row-grid">
                   <div>
                     <label style={{ display: "block", fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--text-muted)", marginBottom: "8px", fontWeight: "600" }}>Name</label>
                     <input type="text" name="name" value={formData.name} onChange={handleChange} required className="form-input" style={{ width: "100%" }} placeholder="John Doe" />
@@ -234,7 +236,7 @@ export default function CustomCropProgram() {
                   </div>
                 </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
+                <div className="form-row-grid">
                   <div>
                     <label style={{ display: "block", fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--text-muted)", marginBottom: "8px", fontWeight: "600" }}>Business Email</label>
                     <input type="email" name="email" value={formData.email} onChange={handleChange} required className="form-input" style={{ width: "100%" }} placeholder="buyer@company.com" />
@@ -245,7 +247,7 @@ export default function CustomCropProgram() {
                   </div>
                 </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
+                <div className="form-row-grid">
                   <div>
                     <label style={{ display: "block", fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--text-muted)", marginBottom: "8px", fontWeight: "600" }}>Desired Crop Type</label>
                     <select name="desiredCrop" value={formData.desiredCrop} onChange={handleChange} className="form-input" style={{ width: "100%", appearance: "none" }}>

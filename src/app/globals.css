@@ -277,24 +277,94 @@ body {
   }
 }
 
-/* Growing Process (Vertical Timeline) mobile positioning */
+/* ── Contact Section — responsive form grid ─────────────────────────────── */
+.form-row-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 600px) {
+  /* Reduce section padding on small screens */
+  .contact-section {
+    padding: 80px 5% !important;
+  }
+
+  /* Stack the info + form columns */
+  .contact-layout {
+    grid-template-columns: 1fr !important;
+    gap: 40px !important;
+  }
+
+  /* Each form panel gets full width with comfortable padding */
+  .contact-form-panel {
+    padding: 28px 20px !important;
+    border-radius: 16px !important;
+  }
+
+  /* All two-column rows collapse to one column */
+  .form-row-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  /* Inputs fill their column and have a comfortable tap size */
+  .form-input {
+    padding: 13px 16px !important;
+    font-size: 1rem !important;  /* Prevents iOS auto-zoom (must be ≥ 16px) */
+  }
+}
+
+/* Growing Process timeline — desktop card width */
+.phase-card-wrapper {
+  width: 45%;
+  max-width: 450px;
+  padding: 0 20px;
+}
+
+/* Growing Process (Vertical Timeline) mobile layout */
 @media (max-width: 767px) {
-  .timeline-track-line,
-  .timeline-glow-line {
+  /* Shift the axis line to the left rail */
+  .timeline-axis {
     left: 20px !important;
     transform: none !important;
   }
-  
+
+  /* Each row becomes a block, indented to clear the left rail */
   .process-step-node {
     justify-content: flex-start !important;
-    padding-left: 35px !important;
-    margin-bottom: 30px !important;
-    width: 100% !important;
+    padding-left: 48px !important;
+    margin-bottom: 36px !important;
+    align-items: flex-start !important;
   }
-  
-  .process-step-node > div {
-    max-width: 100% !important;
+
+  /* Card takes full available width */
+  .phase-card-wrapper {
     width: 100% !important;
+    max-width: 100% !important;
     padding: 0 !important;
   }
+
+  /* Each dot snaps to the left rail at 20px */
+  .timeline-dot {
+    left: 20px !important;
+    top: 22px !important;
+    transform: translate(-50%, -50%) !important;
+  }
+}
+
+/* Custom pulse animation for scroll indicators */
+@keyframes scrollPulse {
+  0%, 100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 0.4;
+    transform: translateY(6px);
+  }
+}
+
+.pulse-indicator-anim {
+  animation: scrollPulse 2s infinite;
 }

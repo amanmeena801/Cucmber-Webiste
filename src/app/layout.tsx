@@ -17,7 +17,7 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "AEROVERT | Premium B2B Greenhouse Farming & Sustainable Produce",
+  title: "Meenakrishi Farm | Premium B2B Greenhouse Farming & Sustainable Produce",
   description: "Experience 10 acres of protected agriculture excellence. High-end greenhouse farming producing consistent, high-yield, organic-standard cucumbers, tomatoes, and capsicum for wholesale markets.",
 };
 

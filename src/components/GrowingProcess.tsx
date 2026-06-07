@@ -3,7 +3,14 @@
 import React, { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Compass, Eye, ShieldCheck, ThermometerSnowflake, Activity, Navigation } from "lucide-react";
+import {
+  Compass,
+  Eye,
+  ShieldCheck,
+  ThermometerSnowflake,
+  Activity,
+  Navigation,
+} from "lucide-react";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -11,15 +18,39 @@ if (typeof window !== "undefined") {
 
 export default function GrowingProcess() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const axisRef = useRef<HTMLDivElement>(null);
   const lineRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const container = containerRef.current;
+    const axis = axisRef.current;
     const line = lineRef.current;
-    if (!container || !line) return;
+    if (!container || !axis || !line) return;
 
-    // Timeline central path drawing animation
-    gsap.fromTo(
+    // ── Measure dot positions and align the axis exactly ──────────────────
+    // After render, getBoundingClientRect gives real positions.
+    const allDots = Array.from(container.querySelectorAll<HTMLElement>(".timeline-dot"));
+    const allCards = Array.from(container.querySelectorAll<HTMLElement>(".step-content-card"));
+    if (allDots.length > 0 && allCards.length > 0) {
+      const axisRect = axis.parentElement!.getBoundingClientRect();
+      const firstDot = allDots[0].getBoundingClientRect();
+      const lastCard = allCards[allCards.length - 1].getBoundingClientRect();
+
+      // Top: align with centre of first dot
+      const topOffset = firstDot.top + firstDot.height / 2 - axisRect.top;
+      // Bottom: align with the bottom edge of the last card
+      const bottomOffset = axisRect.bottom - lastCard.bottom;
+
+      axis.style.top = `${topOffset}px`;
+      axis.style.bottom = `${bottomOffset}px`;
+      axis.style.height = "auto";
+    }
+
+    // Collect this component's triggers for isolated cleanup
+    const ownTriggers: ScrollTrigger[] = [];
+
+    // ── Draw the glowing line as user scrolls ──────────────────────────────
+    const lineST = gsap.fromTo(
       line,
       { height: "0%" },
       {
@@ -32,39 +63,65 @@ export default function GrowingProcess() {
           scrub: true,
         },
       }
-    );
+    ).scrollTrigger;
+    if (lineST) ownTriggers.push(lineST);
 
-    // Fade in nodes individually
-    const steps = container.querySelectorAll(".process-step-node");
-    steps.forEach((step) => {
-      const dot = step.querySelector(".timeline-dot");
-      const content = step.querySelector(".step-content-card");
-      
+    // ── Animate each phase node individually ───────────────────────────────
+    const stepEls = container.querySelectorAll<HTMLElement>(".process-step-node");
+    const isMobile = window.innerWidth <= 767;
+
+    stepEls.forEach((step) => {
+      const dot = step.querySelector<HTMLElement>(".timeline-dot");
+      const content = step.querySelector<HTMLElement>(".step-content-card");
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: step,
-          start: "top 75%",
+          start: "top 82%",
           toggleActions: "play none none reverse",
         },
       });
 
+      if (tl.scrollTrigger) ownTriggers.push(tl.scrollTrigger);
+
+      // Dot: scales up and turns green on enter
       if (dot) {
         tl.fromTo(
           dot,
-          { scale: 0, backgroundColor: "#1f2937", borderColor: "rgba(255,255,255,0.1)" },
-          { scale: 1, backgroundColor: "#10b981", borderColor: "rgba(16,185,129,0.3)", duration: 0.4 }
+          {
+            scale: 1,
+            backgroundColor: "#1f2937",
+            borderColor: "rgba(255,255,255,0.25)",
+            boxShadow: "0 0 0px transparent",
+          },
+          {
+            scale: 1.35,
+            backgroundColor: "#10b981",
+            borderColor: "rgba(16,185,129,0.6)",
+            boxShadow: "0 0 14px #10b981",
+            duration: 0.4,
+            ease: "back.out(1.7)",
+          }
         );
       }
 
+      // Card: slides + fades in
       if (content) {
+        const xFrom = isMobile ? 0 : step.classList.contains("left-node") ? -40 : 40;
+        const yFrom = isMobile ? 18 : 0;
         tl.fromTo(
           content,
-          { opacity: 0, x: (step.classList.contains("left-node") ? -40 : 40) },
-          { opacity: 1, x: 0, duration: 0.6, ease: "power2.out" },
+          { opacity: 0, x: xFrom, y: yFrom },
+          { opacity: 1, x: 0, y: 0, duration: 0.6, ease: "power2.out" },
           "-=0.2"
         );
       }
     });
+
+    return () => {
+      // Kill ONLY this component's triggers — no side effects on others
+      ownTriggers.forEach((t) => t.kill());
+    };
   }, []);
 
   const steps = [
@@ -123,7 +180,7 @@ export default function GrowingProcess() {
       <div className="grid-bg-mask" />
       <div className="green-glow-bg" style={{ bottom: "-100px", right: "-100px" }} />
 
-      {/* Header */}
+      {/* Section Header */}
       <div
         style={{
           textAlign: "center",
@@ -161,6 +218,7 @@ export default function GrowingProcess() {
 
       {/* Timeline Tree */}
       <div
+        className="timeline-tree"
         style={{
           position: "relative",
           maxWidth: "1000px",
@@ -168,77 +226,92 @@ export default function GrowingProcess() {
           zIndex: 5,
         }}
       >
-        {/* Central Vertical Line Track */}
+        {/*
+          .timeline-axis: a 2px wide column.
+          - Desktop: centred with left 50% + translateX(-50%).
+          - Mobile CSS: left 20px, transform none.
+          - top/bottom are set by JS after render to span exactly
+            from the first dot centre to the last dot centre.
+        */}
         <div
-          className="timeline-track-line"
+          ref={axisRef}
+          className="timeline-axis"
           style={{
             position: "absolute",
             left: "50%",
             top: 0,
             bottom: 0,
             width: "2px",
-            backgroundColor: "rgba(255,255,255,0.05)",
             transform: "translateX(-50%)",
             zIndex: 1,
+            pointerEvents: "none",
           }}
-        />
+        >
+          {/* Dim background track — always full height of axis */}
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              backgroundColor: "rgba(255,255,255,0.07)",
+            }}
+          />
+          {/* GSAP-driven glowing fill — starts at height 0% */}
+          <div
+            ref={lineRef}
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "0%",
+              backgroundColor: "var(--accent-green)",
+              boxShadow: "0 0 10px var(--accent-green)",
+            }}
+          />
+        </div>
 
-        {/* Dynamic Glowing Line */}
-        <div
-          ref={lineRef}
-          className="timeline-glow-line"
-          style={{
-            position: "absolute",
-            left: "50%",
-            top: 0,
-            width: "2px",
-            backgroundColor: "var(--accent-green)",
-            boxShadow: "0 0 10px var(--accent-green)",
-            transform: "translateX(-50%)",
-            zIndex: 2,
-          }}
-        />
-
-        {/* Node Loop */}
+        {/* Phase Nodes */}
         {steps.map((step, idx) => (
           <div
             key={idx}
-            className={`process-step-node flex flex-col md:flex-row mb-16 md:mb-24 relative ${
+            className={`process-step-node ${
               step.side === "left" ? "left-node" : "right-node"
             }`}
             style={{
+              position: "relative",
               display: "flex",
               justifyContent: step.side === "left" ? "flex-start" : "flex-end",
-              alignItems: "center",
+              alignItems: "flex-start",
               width: "100%",
+              marginBottom: "80px",
             }}
           >
-            {/* Center Dot */}
+            {/*
+              Dot — sits on the axis line.
+              "top: 22px" = vertically centres the dot on the 44px icon row
+              (44px icon ÷ 2 = 22px to reach its centre).
+              transform: translate(-50%, -50%) centres the 16px dot on that point.
+              Mobile CSS overrides left to 20px to sit on the left rail.
+            */}
             <div
-              className="timeline-dot hidden md:block"
+              className="timeline-dot"
               style={{
                 position: "absolute",
                 left: "50%",
-                top: "50%",
+                top: "22px",
                 width: "16px",
                 height: "16px",
                 borderRadius: "50%",
-                border: "2px solid rgba(255, 255, 255, 0.2)",
+                border: "2px solid rgba(255,255,255,0.25)",
                 backgroundColor: "#1f2937",
                 transform: "translate(-50%, -50%)",
                 zIndex: 10,
-                boxShadow: "0 0 10px rgba(0,0,0,0.5)",
+                flexShrink: 0,
               }}
             />
 
-            {/* Content Container */}
-            <div
-              style={{
-                width: "100%",
-                maxWidth: "450px",
-                padding: "0 20px",
-              }}
-            >
+            {/* Card */}
+            <div className="phase-card-wrapper">
               <div
                 className="glass-panel step-content-card"
                 style={{
@@ -246,9 +319,14 @@ export default function GrowingProcess() {
                   position: "relative",
                   transition: "border-color 0.3s ease",
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.borderColor = "var(--border-green-hover)")}
-                onMouseLeave={(e) => (e.currentTarget.style.borderColor = "var(--glass-border)")}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.borderColor = "var(--border-green-hover)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.borderColor = "var(--glass-border)")
+                }
               >
+                {/* Icon + Phase label row */}
                 <div
                   style={{
                     display: "flex",
@@ -267,6 +345,7 @@ export default function GrowingProcess() {
                       alignItems: "center",
                       justifyContent: "center",
                       border: "1px solid var(--border-green)",
+                      flexShrink: 0,
                     }}
                   >
                     {step.icon}

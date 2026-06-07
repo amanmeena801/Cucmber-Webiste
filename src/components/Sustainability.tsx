@@ -153,7 +153,7 @@ export default function Sustainability() {
               fontWeight: "300",
             }}
           >
-            AEROVERT operates under a closed circular ecological loop. We prove that premium quality produce does not require compromising resources. Through smart mechanics and organic protection, we grow healthy food responsibly.
+            Meenakrishi Farm operates under a closed circular ecological loop. We prove that premium quality produce does not require compromising resources. Through smart mechanics and organic protection, we grow healthy food responsibly.
           </p>
         </div>
 
