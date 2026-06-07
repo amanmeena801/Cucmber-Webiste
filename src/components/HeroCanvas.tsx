@@ -15,6 +15,7 @@ export default function HeroCanvas() {
   const [images, setImages] = useState<HTMLImageElement[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [loadProgress, setLoadProgress] = useState(0);
+  const [subtextIndex, setSubtextIndex] = useState(0);
 
   const totalFrames = 290;
   const textSequences = [
@@ -24,6 +25,25 @@ export default function HeroCanvas() {
     { text: "Protected Growth. Reliable Supply.", id: 3 },
     { text: "Fresh Produce For Buyers Who Demand Excellence", id: 4 },
   ];
+
+  const subtextOptions = [
+    "🌱 Planting the first seed...",
+    "🌿 Preparing the greenhouse...",
+    "💧 Delivering nutrients...",
+    "☀️ Optimizing growing conditions...",
+    "🌼 Encouraging healthy flowering...",
+    "🥒 Harvesting premium produce...",
+    "🚜 Bringing the farm online...",
+  ];
+
+  // Rotate subtext during loading
+  useEffect(() => {
+    if (!isLoading) return;
+    const interval = setInterval(() => {
+      setSubtextIndex((prev) => (prev + 1) % subtextOptions.length);
+    }, 2500);
+    return () => clearInterval(interval);
+  }, [isLoading, subtextOptions.length]);
 
   // Preload Images
   useEffect(() => {
@@ -269,42 +289,26 @@ export default function HeroCanvas() {
               fontFamily: "var(--font-heading)",
               fontSize: "1.25rem",
               fontWeight: "500",
-              letterSpacing: "0.1em",
-              color: "var(--text-secondary)",
+              letterSpacing: "0.08em",
+              color: "#ffffff",
               textAlign: "center",
             }}
           >
-            PRELOADING LIFE-CYCLE MODULES
+            Growing Something Fresh...
             <div
+              key={subtextIndex}
               style={{
                 fontSize: "0.85rem",
                 color: "var(--text-muted)",
                 letterSpacing: "0.05em",
-                marginTop: "6px",
+                marginTop: "10px",
+                fontWeight: "300",
+                fontFamily: "var(--font-sans)",
+                animation: "pulse 2s infinite ease-in-out",
               }}
             >
-              Establishing climate chamber connection...
+              {subtextOptions[subtextIndex]}
             </div>
-          </div>
-          {/* Progress bar */}
-          <div
-            style={{
-              width: "200px",
-              height: "3px",
-              backgroundColor: "rgba(255,255,255,0.05)",
-              borderRadius: "2px",
-              overflow: "hidden",
-            }}
-          >
-            <div
-              style={{
-                width: `${loadProgress}%`,
-                height: "100%",
-                backgroundColor: "var(--accent-green)",
-                transition: "width 0.1s ease-out",
-                boxShadow: "0 0 10px var(--accent-green)",
-              }}
-            />
           </div>
         </div>
       )}

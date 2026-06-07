@@ -239,14 +239,14 @@ export default function ContactSection() {
                     <input type="email" name="email" value={formData.email} onChange={handleChange} required className="form-input" style={{ width: "100%" }} placeholder="aman@exporters.com" />
                   </div>
                   <div>
-                    <label style={{ display: "block", fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.05em", color: "var(--text-muted)", marginBottom: "8px", fontWeight: "600" }}>Direct Line</label>
+                    <label style={{ display: "block", fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.05em", color: "var(--text-muted)", marginBottom: "8px", fontWeight: "600" }}>Phone Number</label>
                     <input type="tel" name="phone" value={formData.phone} onChange={handleChange} required className="form-input" style={{ width: "100%" }} placeholder="+91 99999 99999" />
                   </div>
                 </div>
 
                 <div className="form-row-grid">
                   <div>
-                    <label style={{ display: "block", fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.05em", color: "var(--text-muted)", marginBottom: "8px", fontWeight: "600" }}>Target Crop</label>
+                    <label style={{ display: "block", fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.05em", color: "var(--text-muted)", marginBottom: "8px", fontWeight: "600" }}>Crop Interested</label>
                     <select name="crop" value={formData.crop} onChange={handleChange} className="form-input" style={{ width: "100%" }}>
                       <option value="English Cucumber">English Cucumber</option>
                       <option value="Truss Tomato">Truss Tomato</option>
