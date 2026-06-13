@@ -51,14 +51,48 @@ export default function CustomCropProgram() {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormState("submitting");
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          company: formData.company,
+          email: formData.email,
+          phone: formData.phone,
+          crop: formData.desiredCrop,
+          qty: `${formData.monthlyQuantity} Tons/Month`,
+          msg: `[PARTNERSHIP PROGRAM]\nDelivery Location: ${formData.location}\nNotes/Specs: ${formData.notes}`,
+        }),
+      });
 
-    // Simulate API submission
-    setTimeout(() => {
+      if (!response.ok) {
+        throw new Error("Failed to submit partnership request");
+      }
+
+      const result = await response.json();
+      console.log("Partnership request submitted successfully:", result);
+      
       setFormState("success");
-    }, 1500);
+      setFormData({
+        name: "",
+        company: "",
+        email: "",
+        phone: "",
+        desiredCrop: "English Cucumber",
+        monthlyQuantity: "",
+        location: "",
+        notes: "",
+      });
+    } catch (err) {
+      console.error("Error submitting partnership request:", err);
+      setFormState("error");
+    }
   };
 
   return (
@@ -205,7 +239,7 @@ export default function CustomCropProgram() {
                     color: "#ffffff",
                   }}
                 >
-                  Assessment Submitted Successfully
+                  Query Request Received!
                 </h3>
                 <p
                   style={{
@@ -217,10 +251,49 @@ export default function CustomCropProgram() {
                     maxWidth: "400px",
                   }}
                 >
-                  Thank you for submitting your specifications. Our agricultural engineers and supply managers will review your requirements and reach out within 24 hours to schedule a consultation.
+                  We have received your query request and will get back to you on it.
                 </p>
                 <button onClick={() => setFormState("idle")} className="btn-secondary" style={{ marginTop: "10px" }}>
                   Submit Another Inward Spec
+                </button>
+              </div>
+            ) : formState === "error" ? (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  textAlign: "center",
+                  padding: "40px 20px",
+                  gap: "20px",
+                }}
+              >
+                <AlertCircle size={64} style={{ color: "#ef4444" }} />
+                <h3
+                  style={{
+                    fontFamily: "var(--font-heading)",
+                    fontSize: "1.5rem",
+                    fontWeight: "700",
+                    color: "#ffffff",
+                  }}
+                >
+                  Submission Failed
+                </h3>
+                <p
+                  style={{
+                    fontFamily: "var(--font-sans)",
+                    fontSize: "0.9rem",
+                    color: "var(--text-secondary)",
+                    lineHeight: "1.6",
+                    fontWeight: "300",
+                    maxWidth: "400px",
+                  }}
+                >
+                  Something went wrong while logging your inquiry. Please try again after some time.
+                </p>
+                <button onClick={() => setFormState("idle")} className="btn-primary" style={{ marginTop: "10px", padding: "12px 24px" }}>
+                  Try Again
                 </button>
               </div>
             ) : (

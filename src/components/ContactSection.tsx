@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Mail, Phone, MapPin, Send, CheckCircle2, Clock } from "lucide-react";
+import { Mail, Phone, MapPin, Send, CheckCircle2, Clock, XCircle } from "lucide-react";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -11,7 +11,7 @@ if (typeof window !== "undefined") {
 
 export default function ContactSection() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [formState, setFormState] = useState<"idle" | "submitting" | "success">("idle");
+  const [formState, setFormState] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [formData, setFormData] = useState({
     name: "",
     company: "",
@@ -50,12 +50,43 @@ export default function ContactSection() {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormState("submitting");
-    setTimeout(() => {
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to submit inquiry");
+      }
+
+      const result = await response.json();
+      console.log("Inquiry submitted successfully:", result);
+      
+      if (result.previewUrl) {
+        console.log(`%c[EMAIL PREVIEW] View email here: ${result.previewUrl}`, 'color: #10b981; font-weight: bold;');
+      }
+
       setFormState("success");
-    }, 1500);
+      setFormData({
+        name: "",
+        company: "",
+        email: "",
+        phone: "",
+        crop: "English Cucumber",
+        qty: "",
+        msg: "",
+      });
+    } catch (err) {
+      console.error("Error submitting contact form:", err);
+      setFormState("error");
+    }
   };
 
   return (
@@ -214,11 +245,20 @@ export default function ContactSection() {
             {formState === "success" ? (
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: "40px 10px", gap: "20px" }}>
                 <CheckCircle2 size={64} style={{ color: "var(--accent-green)" }} />
-                <h3 style={{ fontFamily: "var(--font-heading)", fontSize: "1.5rem", fontWeight: "700" }}>Inquiry Logged</h3>
+                <h3 style={{ fontFamily: "var(--font-heading)", fontSize: "1.5rem", fontWeight: "700" }}>Query Request Received!</h3>
                 <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.9rem", color: "var(--text-secondary)", lineHeight: "1.6", fontWeight: "300" }}>
-                  A trade manager will reach out shortly with our latest price matrix sheet.
+                  We have received your query request and will get back to you on it.
                 </p>
                 <button onClick={() => setFormState("idle")} className="btn-secondary">Submit New Quote Request</button>
+              </div>
+            ) : formState === "error" ? (
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: "40px 10px", gap: "20px" }}>
+                <XCircle size={64} style={{ color: "#ef4444" }} />
+                <h3 style={{ fontFamily: "var(--font-heading)", fontSize: "1.5rem", fontWeight: "700" }}>Submission Failed</h3>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.9rem", color: "var(--text-secondary)", lineHeight: "1.6", fontWeight: "300" }}>
+                  Something went wrong while logging your inquiry. Please try again after some time.
+                </p>
+                <button onClick={() => setFormState("idle")} className="btn-primary" style={{ padding: "12px 24px" }}>Try Again</button>
               </div>
             ) : (
               <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
